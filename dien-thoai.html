@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Điện thoại</title>
+    <meta charset="UTF-8">
+    <style>
+        .display-none{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+<form>
+    <b>Nokia</b>
+    <input type="button" id="nokiaTurnOnOff" value="Bật/Tắt nguồn" onclick="checkStatus('nokia');" >
+    <table border="1px" width="500px"  id="nokiaTable">
+        <tr height="70px" align="center">
+            <td>Soạn tin nhắn</td>
+            <td>
+                <input type="text" id="nokiaTextMess" placeholder="Soạn Tin Nhắn"><br/><br/>
+                <input type="button" id="nokiaSendMess" value="Gửi" onclick="myNokia.sendMess();">
+                <input type="button" id="nokiaSaveMess" value="Lưu" onclick="myNokia.saveMess();">
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Hộp thư nháp</td>
+            <td>
+                <div id="nokiaSavePlace"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Hộp thư đến</td>
+            <td>
+                <div id="nokiaInbox"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Tin đã gửi</td>
+            <td>
+                <div id="nokiaSentMess"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Tình trạng pin</td>
+            <td>
+                <p>Pin còn: <span id="nokiaBatteryStatus"></span></p><br/>
+                <input type="button" id="nokiaCharge" value="Sạc pin" onclick="myNokia.charge();">
+            </td>
+        </tr>
+
+    </table>
+    <br/>
+    <br/>
+    <b>Iphone</b>
+    <input type="button" id="iphoneTurnOnOff" value="Bật/Tắt nguồn" onclick="checkStatus('iphone')">
+    <table border="1px" width="500px" id="iphoneTable">
+
+        <tr height="70px" align="center">
+            <td>Soạn tin nhắn</td>
+            <td>
+                <input type="text" id="iphoneTextMess" placeholder="Soạn Tin Nhắn"><br/><br/>
+                <input type="button" id="iphoneSendMess" value="Gửi" onclick="myIphone.sendMess();">
+                <input type="button" id="iphoneSaveMess" value="Lưu" onclick="myIphone.saveMess();">
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Hộp thư nháp</td>
+            <td>
+                <div id="iphoneSavePlace"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Hộp thư đến</td>
+            <td>
+                <div id="iphoneInbox"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Tin đã gửi</td>
+            <td>
+                <div id="iphoneSentMess"></div>
+            </td>
+        </tr>
+        <tr height="70px" align="center">
+            <td>Tình trạng pin</td>
+            <td>
+                <p>Pin còn: <span id="iphoneBatteryStatus"></span></p><br/>
+                <input type="button" id="iphoneCharge" value="Sạc pin" onclick="myIphone.charge();">
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+
+    function Moblie(name, battery, status) {
+        this.name = name;
+        this.battery = battery;
+        this.status = status;
+        this.getName = function () {
+            return this.name;
+        };
+        this.setName = function (name) {
+            this.name = name;
+        };
+        this.getBatteryInfo = function () {
+            return this.battery;
+        };
+        this.getStatus = function () {
+            return this.status;
+        };
+        this.charge = function () {
+            if (this.battery < 100) {
+                    this.battery++
+                } else {
+                    alert("Pin đầy");
+                }
+            if (name ==="nokia"){
+                document.getElementById("nokiaBatteryStatus").innerHTML = this.battery;
+            }
+            if (name ==="iphone"){
+                document.getElementById("iphoneBatteryStatus").innerHTML = this.battery;
+            }
+        };
+        this.sendMess = function () {
+            if(this.battery>0) {
+                if (name === "nokia") {
+                    var nokiaText = document.getElementById("nokiaTextMess").value;
+                    document.getElementById("iphoneInbox").innerHTML = nokiaText;
+                    document.getElementById("nokiaSentMess").innerHTML = nokiaText;
+                    this.battery--;
+                    document.getElementById("nokiaBatteryStatus").innerHTML = this.battery;
+                }
+                if (name === "iphone") {
+                    var iphoneText = document.getElementById("iphoneTextMess").value;
+                    document.getElementById("nokiaInbox").innerHTML = iphoneText;
+                    document.getElementById("iphoneSentMess").innerHTML = iphoneText;
+                    this.battery--;
+                    document.getElementById("iphoneBatteryStatus").innerHTML = this.battery;
+                }
+            } else {
+                alert("Sạc pin để sử dụng");
+            }
+        };
+        this.saveMess = function () {
+            if (this.battery>0) {
+                if (name === "nokia") {
+                    var nokiaText1 = document.getElementById("nokiaTextMess").value;
+                    document.getElementById("nokiaSavePlace").innerHTML = nokiaText1;
+                    this.battery--
+                    document.getElementById("nokiaBatteryStatus").innerHTML = this.battery;
+                }
+                if (name === "iphone") {
+                    var iphoneText1 = document.getElementById("iphoneTextMess").value;
+                    document.getElementById("iphoneSavePlace").innerHTML = iphoneText1;
+                    this.battery--;
+                    document.getElementById("iphoneBatteryStatus").innerHTML = this.battery;
+                }
+            } else {
+                alert("Sạc pin để sử dụng");
+            }
+        };
+
+    }
+    function checkStatus (name){
+        if (name === "nokia"){
+            if(myNokia.status === "on"){
+                document.getElementById("nokiaTable").classList.add('display-none');
+                myNokia.status = "off"
+            }
+            else {
+                document.getElementById("nokiaTable").classList.remove('display-none');
+                myNokia.status = "on"
+            }
+        }
+        if (name === "iphone"){
+            if(myIphone.status === "on"){
+                document.getElementById("iphoneTable").classList.add('display-none');
+                myIphone.status = "off"
+            }
+            else {
+                document.getElementById("iphoneTable").classList.remove('display-none');
+                myIphone.status ="on"
+            }
+
+        }
+    };
+    let myNokia = new Moblie("nokia",10, "on");
+    let myIphone = new Moblie("iphone", 10, "on");
+    myNokia.sendMess();
+    myNokia.saveMess();
+    myNokia.charge();
+    myIphone.sendMess();
+    myIphone.saveMess();
+    myIphone.charge();
+
+
+</script>
+</body>
+</html>
